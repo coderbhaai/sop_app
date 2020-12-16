@@ -1,0 +1,137 @@
+
+// new Image(image: AssetImage('assets/images/logo.png')),
+          // style: TextStyle(color: Color(0xff238c00)),
+            // Image(image: AssetImage('assets/images/logo.png')),
+            // Image.asset('assets/images/logo.png', width: 300, height: 100)
+
+
+
+
+
+
+
+
+
+
+
+
+// onTap: (newIndex) => setState(() => _index = newIndex),
+      // currentIndex: _index,
+      // items: [
+      //   BottomNavigationBarItem(
+      //       icon: Icon(Icons.looks_one), title: Text("Blue")),
+      //   BottomNavigationBarItem(
+      //       icon: Icon(Icons.looks_two), title: Text("Orange")),
+      //   BottomNavigationBarItem(icon: Icon(Icons.looks_3), title: Text("Red")),
+      // ],
+      // type: BottomNavigationBarType.fixed,
+      // currentIndex: _currentIndex,
+      // backgroundColor: colorScheme.surface,
+      // selectedItemColor: colorScheme.onSurface,
+      // unselectedItemColor: colorScheme.onSurface.withOpacity(.60),
+      // selectedLabelStyle: textTheme.caption,
+      // unselectedLabelStyle: textTheme.caption,
+      // onTap: (value) {
+      //   // Respond to item press.
+      //   setState(() => _currentIndex = value);
+      // },
+      // items: [
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.play_arrow),
+      //     title: Text("Profile", style: TextStyle(color: Colors.red)),
+      //   ),
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.person),
+      //     title: Text("Profile", style: TextStyle(color: Colors.red)),
+      //   ),
+      //   BottomNavigationBarItem(
+      //     icon: Icon(Icons.person),
+      //     title: Text("Profile", style: TextStyle(color: Colors.red)),
+      //   ),
+      // ],
+
+      
+    // return Container(
+    //   child: Row(
+    //     children: [
+    //       IconButton(
+    //           icon: Icon(Icons.play_arrow),
+    //           onPressed: () {
+    //             print('Go to Home');
+    //             Navigator.pushNamed(context, '/home');
+    //           }),
+    //       Text("Profile", style: TextStyle(color: Colors.brown)),
+    //       IconButton(
+    //           icon: Icon(Icons.play_arrow),
+    //           onPressed: () {
+    //             print('Go to About');
+    //             Navigator.pushNamed(context, '/about');
+    //           }),
+    //       IconButton(
+    //           icon: Icon(Icons.play_arrow),
+    //           onPressed: () {
+    //             print('Go to Contact');
+    //             Navigator.pushNamed(context, '/contact');
+    //           })
+    //     ],
+    //   ),
+    // );
+    // final colorScheme = Theme.of(context).colorScheme;
+    // final textTheme = Theme.of(context).textTheme;
+
+
+    class FixedAppbar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: Text('This is aap bar'),
+      ),
+    );
+  }
+}
+
+// class Navigationbar extends  StatelessWidget{
+//  @override
+//  Widget build(BuildContext context) {
+//
+//    return Scaffold(
+//        bottomNavigationBar : BottomNavigationBar(
+//          items: const <BottomNavigationBarItem>[
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.ac_unit),
+//              title: Text("AC"),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.access_alarm),
+//              title: Text("Alarm"),
+//            ),
+//            BottomNavigationBarItem(
+//              icon: Icon(Icons.add_call),
+//              title: Text("Call"),
+//            ),
+//          ],
+//        )
+
+//    );
+//  }
+
+// }
+
+
+  // static const TextStyle optionStyle =
+  //     TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  // static const List<Widget> _widgetOptions = <Widget>[
+  //   Text(
+  //     'Index 0: Home',
+  //     style: optionStyle,
+  //   ),
+  //   Text(
+  //     'Index 1: Business',
+  //     style: optionStyle,
+  //   ),
+  //   Text(
+  //     'Index 2: School',
+  //     style: optionStyle,
+  //   ),
+  // ];

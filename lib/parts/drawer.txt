@@ -1,0 +1,116 @@
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import 'package:sop_app/models/drawer.dart';
+import '../pages/about.dart';
+
+class Sidebar extends StatefulWidget {
+  @override
+  _SidebarState createState() => _SidebarState();
+}
+
+Future<List<DrawerModel>> _data() async {
+    var res = await http.get("http://click2learn.co.in/api/deptList-p");
+    print('testing');
+    List<DrawerModel> hlist = [];
+    if (res.statusCode == 200) {
+      Map<String, dynamic> body = json.decode(res.body);
+      for (var item in body['data']) {
+        DrawerModel home = DrawerModel.fromJson(item);
+        hlist.add(home);
+      }
+      // print(hlist);
+    }
+    return hlist;
+}
+
+class _SidebarState extends State<Sidebar> {
+@override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          new SizedBox(
+            height: 100.0,
+            child: new DrawerHeader(
+              child: Text( 'Biz Sutra', textAlign: TextAlign.center, style: TextStyle( color: Colors.red, ), ),
+              decoration: BoxDecoration( color: Colors.blue, ),
+            ),
+          ),
+          
+        ],
+      ),
+    );
+  }
+}
+
+
+class DrawerList extends StatelessWidget {
+  List<DrawerModel> list;
+
+  DrawerList({Key key, this.list}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+          FutureBuilder(
+            future: _data(),
+            builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.hasError) {
+              return Container(
+                child: Text(snapshot.error),
+              );
+            } else if (snapshot.data == null) {
+              return Container(
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Card(
+                    child: Stack(
+                      children: <Widget>[
+                        InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                      //  HomeDetail(snapshot.data[index].id)));
+                                       About()));
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(16),
+                            child: Text(
+                              snapshot.data[index].department,
+                              style: TextStyle(fontSize: 22),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              );
+            }
+          },
+          );
+    // return (
+    //     ListTile( title: Text('Home'), onTap: () { Navigator.pop(context); Navigator.pushNamed(context, '/home'); }, ),
+    //     ListTile( title: Text('About'), onTap: () { Navigator.pop(context); Navigator.pushNamed(context, '/about'); }, ),
+    //     ListTile( title: Text('Contact'), onTap: () { Navigator.pop(context); Navigator.pushNamed(context, '/contact'); }, ),
+    // );
+    // return ListView(
+    //   padding: const EdgeInsets.all(8),
+    //   children: <Widget>[
+    //     Container( height: 50, color: Colors.amber[600], child: const Center(child: Text('Entry A')), ),
+    //     Container( height: 50, color: Colors.amber[500], child: const Center(child: Text('Entry B')), ),
+    //     Container( height: 50, color: Colors.amber[100], child: const Center(child: Text('Entry C')), ),
+    //   ],
+    // );
+  }
+  
+}
