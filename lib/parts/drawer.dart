@@ -57,7 +57,7 @@ class DrawerList extends StatelessWidget {
                       title: Text(
                         deptList.elementAt(index).department + ' Id - ' + deptList.elementAt(index).deptId), 
                         onTap: () { 
-                          Navigator.pop(context); Navigator.pushNamed(context, '/sop', arguments: <String, String>{'id': deptList.elementAt(index).deptId },); 
+                          Navigator.pop(context); Navigator.pushNamed(context, '/department', arguments: <String, String>{'id': deptList.elementAt(index).deptId },);
                         },
                       ),
                 );
