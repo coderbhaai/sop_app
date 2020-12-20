@@ -16,10 +16,13 @@ class _HomeState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       drawer: Sidebar(),
+      bottomNavigationBar: BottomBar(),
       body: Container(
         child: new Column(
           mainAxisSize: MainAxisSize.min,
-          children: <Widget>[Header(), Slider(), BottomBar()],
+          children: <Widget>[Header(), Slider(),
+            // BottomBar()
+          ],
         ),
       ),
     );

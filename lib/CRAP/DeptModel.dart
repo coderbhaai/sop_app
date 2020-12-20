@@ -1,37 +1,38 @@
+// To parse this JSON data, do
+//
+//     final deptModel = deptModelFromJson(jsonString);
 
 import 'dart:convert';
 
-import 'DeptMtype.dart';
+DeptModel deptModelFromJson(String str) => DeptModel.fromJson(json.decode(str));
 
-DeptMtype deptMtypeFromJson(String str) => DeptMtype.fromJson(json.decode(str));
+String deptModelToJson(DeptModel data) => json.encode(data.toJson());
 
-String deptMtypeToJson(DeptMtype data) => json.encode(data.toJson());
-
-class DeptMtype {
-    DeptMtype({
+class DeptModel {
+    DeptModel({
         this.data,
     });
 
     Data data;
 
-    factory DeptMtype.fromJson(Map<String, dynamic> json) =>
-        DeptMtype(
-            data: Data.fromJson(json["data"]),
-        );
+    factory DeptModel.fromJson(Map<String, dynamic> json) => DeptModel(
+        data: Data.fromJson(json["data"]),
+    );
 
-    Map<String, dynamic> toJson() =>
-        {
-            "data": data.toJson(),
-        };
+    Map<String, dynamic> toJson() => {
+        "data": data.toJson(),
+    };
 }
 
 class Data {
-    Data({this.deptId,
+    Data({
+        this.deptId,
         this.type,
         this.department,
-        this.basicTime, this.sop,
+        this.basicTime,
+        this.sop,
         this.process,
-    } );
+    });
 
     int deptId;
     String type;
@@ -61,7 +62,9 @@ class Data {
 
 class Process {
     Process({
-         this.processId, this.type, this.process,
+        this.processId,
+        this.type,
+        this.process,
     });
 
     int processId;
@@ -83,7 +86,8 @@ class Process {
 
 class Sop {
     Sop({
-        this.sopData,this.sopUpdatedAt,
+        this.sopData,
+        this.sopUpdatedAt,
     });
 
     String sopData;

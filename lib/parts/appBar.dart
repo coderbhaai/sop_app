@@ -12,20 +12,10 @@ class _HeaderState extends State<Header> {
       centerTitle: true,
       leading: Builder(
         builder: (context) => IconButton(
-          icon: new Icon(
-            Icons.menu,
-            color: Colors.red,
-          ),
-          onPressed: () => Scaffold.of(context).openDrawer(),
+          icon: new Icon( Icons.menu, color: Color.fromRGBO(0,66,96, 1) ), onPressed: () => Scaffold.of(context).openDrawer(),
         ),
       ),
-      title: Text(
-        'Bizz Sutra',
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: Colors.red,
-        ),
-      ),
+      title: Text( 'Bizz Sutra', textAlign: TextAlign.center, style: TextStyle( color: Color.fromRGBO(0,66,96, 1) ) ),
       backgroundColor: Colors.white,
     );
   }
