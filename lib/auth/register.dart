@@ -1,11 +1,15 @@
-import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:flushbar/flushbar.dart';
 import '../models/UserModel.dart';
 import 'providers/auth.dart';
 import 'providers/user_provider.dart';
 import 'util/validators.dart';
 import 'util/widgets.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+import '../auth/util/app_url.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -13,26 +17,58 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  // Future<OrgList> futureloinlevel;
   final formKey = new GlobalKey<FormState>();
+  String name, org, email, password, password_confirmation;
+  String selectedOrg;
+  List data = List();
 
-  String first_name, last_name, email, password, password_confirmation;
+  Future getOrgList() async {
+    var response = await http.get(AppUrl.getDept, headers: {'Accept': 'application/json'});
+    var responseData = json.decode(response.body);
+    setState(() {
+      data = responseData['data'];
+    });
+    print(responseData['data']);
+    print('ding');
+    print(data);
+    return "success";
+  }
 
+  @override
+  void initState(){
+    super.initState();
+    getOrgList();
+  }
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
-    final firstnameField = TextFormField(
+    final nameField = TextFormField(
       autofocus: false,
       validator: (value) => value.isEmpty ? "Please enter first name" : null,
-      onSaved: (value) => first_name = value,
-      decoration: buildInputDecoration("First name", Icons.person),
+      onSaved: (value) => name = value,
+      decoration: buildInputDecoration("Name", Icons.person),
+      style: TextStyle(fontSize: 18, color: Colors.white),      
     );
 
-    final lastnameField = TextFormField(
+    final orgField = Container(
+    width: 500.0,
+    // child: DropdownButtonHideUnderline( 
+      child: DropdownButton(
       autofocus: false,
-      validator: (value) => value.isEmpty ? "Please enter last name" : null,
-      onSaved: (value) => last_name = value,
-      decoration: buildInputDecoration("Last name", Icons.person),
+      value: selectedOrg,
+      style: TextStyle(color: Color.fromRGBO(0,66,96, 1) ),
+      hint: Text('Select Organisation', style: TextStyle( color: Color.fromRGBO(234,112,12, 1) ) ),
+      items: data.map((i){
+        return DropdownMenuItem(
+          child: Text(i['org'], style: TextStyle( color: Color.fromRGBO(234,112,12, 1) )),
+          value: i['id'].toString(),
+        );
+      },).toList(),
+      onChanged: (value) { setState(() { selectedOrg = value; }); },
+    )
+    // )
     );
 
     final emailField = TextFormField(
@@ -40,6 +76,7 @@ class _RegisterState extends State<Register> {
       validator: validateEmail,
       onSaved: (value) => email = value,
       decoration: buildInputDecoration("Email", Icons.email),
+      style: TextStyle(fontSize: 18, color: Colors.white),
     );
 
     final passwordField = TextFormField(
@@ -48,6 +85,7 @@ class _RegisterState extends State<Register> {
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => password = value,
       decoration: buildInputDecoration("Password", Icons.lock),
+      style: TextStyle(fontSize: 18, color: Colors.white),
     );
 
     final confirmPassword = TextFormField(
@@ -56,6 +94,7 @@ class _RegisterState extends State<Register> {
       onSaved: (value) => password_confirmation = value,
       obscureText: true,
       decoration: buildInputDecoration("Confirm password", Icons.lock),
+      style: TextStyle(fontSize: 18, color: Colors.white),
     );
 
     var loading = Row(
@@ -66,15 +105,35 @@ class _RegisterState extends State<Register> {
       ],
     );
 
+    final forgotLabel = Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        FlatButton(
+          padding: EdgeInsets.all(0.0),
+          child: Text("Forgot password?",
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1) )),
+          onPressed: () {
+//            Navigator.pushReplacementNamed(context, '/reset-password');
+          },
+        ),
+        FlatButton(
+          padding: EdgeInsets.only(left: 0.0),
+          child: Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1))),
+          // onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },
+          onPressed: () { Navigator.pushReplacementNamed(context, '/awaitingApproval'); },
+        ),
+      ],
+    );
+
     var doRegister = () {
       final form = formKey.currentState;
       if (form.validate()) {
         form.save();
-        auth.register(first_name, last_name, email, password, password_confirmation).then((response) {
+        auth.register(name, email, password, password_confirmation, selectedOrg ).then((response) {
           if (response['status']) {
             UserModel user = response['data'];
             Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/dashboard');
+            Navigator.pushReplacementNamed(context, '/awaitingApproval');
           } else {
             Flushbar(
               title: "Registration failed",
@@ -90,37 +149,32 @@ class _RegisterState extends State<Register> {
           duration: Duration(seconds: 20),
         ).show(context);
       }
-
     };
 
     return SafeArea(
       child: Scaffold(
         body: Container(
+          decoration: new BoxDecoration ( color: Color.fromRGBO(0,66,96, 1), ),
+          constraints: BoxConstraints.expand(),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
+            child: SingleChildScrollView(
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                label("First Name"),
-                firstnameField,
-                SizedBox(height: 1.0),
-                label("Last Name"),
-                lastnameField,
-                SizedBox(height: 1.0),
-                label("Email"),
-                emailField,
-                SizedBox(height: 1.0),
-                label("Password"),
-                passwordField,
-                SizedBox(height: 1.0),
-                label("Confirm Password"),
-                confirmPassword,
+                Text( 'Register with Bizz Sutra', textAlign: TextAlign.center, style: TextStyle( color: Color.fromRGBO(234,112,12, 1), fontWeight: FontWeight.bold, fontSize: 25.0 ) ),
+                SizedBox(height: 50.0), label("Name"), SizedBox(height: 3.0), nameField,
+                SizedBox(height: 10.0), label("Email"), SizedBox(height: 3.0), emailField,
+                SizedBox(height: 10.0), label("Organisation"), SizedBox(height: 3.0), orgField,
+                SizedBox(height: 10.0), label("Password"), SizedBox(height: 3.0), passwordField,
+                SizedBox(height: 10.0), label("Confirm Password"), SizedBox(height: 3.0), confirmPassword,
                 SizedBox(height: 12.0),
-                auth.loggedInStatus == Status.Authenticating
-                    ? loading
-                    : longButtons("Register", doRegister),
+                auth.loggedInStatus == Status.Authenticating ? loading : longButtons("Register", doRegister),
+                forgotLabel
               ],
+            ),
             ),
           ),
         ),

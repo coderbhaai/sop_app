@@ -50,17 +50,15 @@ class _LoginState extends State<Login> {
         FlatButton(
           padding: EdgeInsets.all(0.0),
           child: Text("Forgot password?",
-              style: TextStyle(fontWeight: FontWeight.w300)),
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1) )),
           onPressed: () {
 //            Navigator.pushReplacementNamed(context, '/reset-password');
           },
         ),
         FlatButton(
           padding: EdgeInsets.only(left: 0.0),
-          child: Text("Sign up", style: TextStyle(fontWeight: FontWeight.w300)),
-          onPressed: () {
-            Navigator.pushReplacementNamed(context, '/register');
-          },
+          child: Text("Sign up", style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1))),
+          onPressed: () { Navigator.pushReplacementNamed(context, '/register'); },
         ),
       ],
     );
@@ -95,20 +93,17 @@ class _LoginState extends State<Login> {
     return SafeArea(
       child: Scaffold(
         body: Container(
+          decoration: new BoxDecoration ( color: Color.fromRGBO(0,66,96, 1), ),
           padding: EdgeInsets.all(40.0),
           child: Form(
             key: formKey,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 15.0),
-                label("Email"),
-                SizedBox(height: 5.0),
-                usernameField,
-                SizedBox(height: 20.0),
-                label("Password"),
-                SizedBox(height: 5.0),
-                passwordField,
+                Text( 'Login with Bizz Sutra', textAlign: TextAlign.center, style: TextStyle( color: Color.fromRGBO(234,112,12, 1), fontWeight: FontWeight.bold, fontSize: 25.0 ) ),
+                SizedBox(height: 50.0), label("Email"), SizedBox(height: 5.0), usernameField, 
+                SizedBox(height: 20.0), label("Password"), SizedBox(height: 5.0), passwordField,
                 SizedBox(height: 20.0),
                 auth.loggedInStatus == Status.Authenticating
                     ? loading

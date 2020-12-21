@@ -46,16 +46,11 @@ class AuthProvider with ChangeNotifier {
 
     if (response.statusCode == 201) {
       final Map<String, dynamic> responseData = json.decode(response.body);
-
       var userData = responseData['data'];
-
       UserModel authUser = UserModel.fromJson(userData);
-
       UserPreferences().saveUser(authUser);
-
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
-
       result = {'status': true, 'message': 'Successful', 'user': authUser};
     } else {
       _loggedInStatus = Status.NotLoggedIn;
@@ -68,25 +63,22 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  Future<Map<String, dynamic>> register(String first_name, String last_name,
-      String email, String password, String password_confirmation) async {
+  Future<Map<String, dynamic>> register( String name, String email, String password, String password_confirmation, String selectedOrg ) async {
     final Map<String, dynamic> registrationData = {
-      // 'user': {
-      'first_name': first_name,
-      'last_name': last_name,
+      'name': name,
+      'org': selectedOrg,
       'email': email,
+      'role': 'User',
+      'status': 0,
       'password': password,
-      'password_confirmation': password_confirmation
-      // }
+      'password_confirmation': password_confirmation,
     };
     print('sending registration data====');
     print(registrationData);
     print('done sending registration data====');
-    return await post(AppUrl.register,
-            body: json.encode(registrationData),
-            headers: {'Content-Type': 'application/json'})
-        .then(onValue)
-        .catchError(onError);
+    return await post(AppUrl.register, body: json.encode(registrationData), headers: {'Content-Type': 'application/json'})
+      .then( onValue )
+      .catchError(onError);
   }
 
   static Future<FutureOr> onValue(Response response) async {
@@ -114,7 +106,6 @@ class AuthProvider with ChangeNotifier {
         'data': responseData
       };
     }
-
     return result;
   }
 

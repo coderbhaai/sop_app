@@ -7,10 +7,9 @@ class UserPreferences {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 print('saveuser');
     prefs.setString("id", user.id);
-    prefs.setString("fname", user.fname);
-    prefs.setString("lname", user.lname);
+    prefs.setString("name", user.name);
+    prefs.setString("role", user.role);
     prefs.setString("email", user.email);
-    prefs.setString("avatar", user.avatar);
     prefs.setString('token', user.token);
     print("object preferences set");
     print(user.token);
@@ -22,30 +21,27 @@ print('saveuser');
 
   Future<UserModel> getUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-print('getuser');
+    print('getuser');
     String id = prefs.getString("id");
-    String fname = prefs.getString("fname");
-    String lname = prefs.getString("lname");
+    String name = prefs.getString("name");
+    String role = prefs.getString("role");
     String email = prefs.getString("email");
-    String avatar = prefs.getString("avatar");
     String token = prefs.getString("token");
-    // return new UserModel(id, fname, lname, email, avatar);
+    // return new UserModel(id, name, role, email, avatar);
     return UserModel(
         id: id,
-        fname: fname,
-        lname: lname,
+        name: name,
+        role: role,
         email: email,
-        avatar: avatar,
         token: token);
   }
 
   void removeUser() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-print('removeuser');
-    prefs.remove("fname");
-    prefs.remove("lname");
+    print('removeuser');
+    prefs.remove("name");
+    prefs.remove("role");
     prefs.remove("email");
-    prefs.remove("avatar");
     prefs.remove("token");
     print("object preferences removed");
   }
