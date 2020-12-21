@@ -44,44 +44,45 @@ class _SopPageState extends State<SopPage> {
               child: FutureBuilder<SopModel>(
                 future: futureloinlevel,
                 builder: (context, snapshot) {
-                  if (snapshot.hasData) {
+                  if (snapshot.hasData){
                     return Column(
                       children: <Widget>[
+
                         Container (
                             decoration: new BoxDecoration ( 
                                 color: Color.fromRGBO(234, 112, 12, 1),
                                 border: Border( bottom: BorderSide( color: Color.fromRGBO(255, 255, 255, 1), width: 2.0 ) )
                             ),
-                            child: new ListTile( title: Text( snapshot.data.name, textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), )), 
+                            child: new ListTile( title: Text( snapshot.data.name +'-'+ snapshot.data.id.toString(), textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), )), 
                         ),
-                        Center(
-                          child: SingleChildScrollView(
-                            child: Html( data: snapshot.data.sop, padding: EdgeInsets.all(8.0), ),
-                          ),
-                        ),
-                        Container(
-                          margin: const EdgeInsets.only(top: 30.0),
-                          child: Text('Further Prcesses under '+ snapshot.data.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0), ),
-                        ),
-                        ListView.builder(
-                        physics: NeverScrollableScrollPhysics(), ///
-                        shrinkWrap: true, ///
-                        scrollDirection: Axis.vertical, ///
-                          itemCount: snapshot.data.child.length,
-                          itemBuilder: (_, index) =>                  
-                          Container (
-                            decoration: new BoxDecoration (
-                                color: Color.fromRGBO(234, 112, 12, 1),
-                                border: Border( bottom: BorderSide( color: Color.fromRGBO(255, 255, 255, 1), width: 2.0 ) )
-                            ),
-                            child: new ListTile( 
-                              title: Text( snapshot.data.child[index].name, textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
-                                onTap: () { 
-                                  Navigator.pushNamed(context, '/sop', arguments: { 'id': snapshot.data.child[index].id.toString(), },);
-                                },
-                            ),
-                          )
-                        )
+                        // Center(
+                        //   child: SingleChildScrollView(
+                        //     child: Html( data: snapshot.data.sop != null ? snapshot.data.sop.sop: 'No Sop yet' , padding: EdgeInsets.all(8.0), ),
+                        //   ),
+                        // ),
+                        // Container(
+                        //   margin: const EdgeInsets.only(top: 30.0),
+                        //   child: Text('Further Prcesses under '+ snapshot.data.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0), ),
+                        // ),
+                        // ListView.builder(
+                        //   physics: NeverScrollableScrollPhysics(),
+                        //   shrinkWrap: true,
+                        //   scrollDirection: Axis.vertical,
+                        //   itemCount: snapshot.data.child.length,
+                        //   itemBuilder: (_, index) =>                  
+                        //   Container (
+                        //     decoration: new BoxDecoration (
+                        //         color: Color.fromRGBO(234, 112, 12, 1),
+                        //         border: Border( bottom: BorderSide( color: Color.fromRGBO(255, 255, 255, 1), width: 2.0 ) )
+                        //     ),
+                        //     child: new ListTile( 
+                        //       title: Text( snapshot.data.child[index].name, textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
+                        //         onTap: () { 
+                        //           Navigator.pushNamed(context, '/sop', arguments: { 'id': snapshot.data.child[index].id.toString(), },);
+                        //         },
+                        //     ),
+                        //   )
+                        // )
                       ],
                     );
                   } else if (snapshot.hasError) {
@@ -106,7 +107,18 @@ class _SopPageState extends State<SopPage> {
     var res = await http.get("http://10.0.2.2:8000/api/sop/$id");
     print(res.toString());
     if (res.statusCode == 200 && res.body.isNotEmpty) {
-      bodyr = json.decode(res.body)[0] as Map;
+      try {
+        // print('Try is working');
+        // var e=await json.decode(res.body)[0];
+        // print('e: $e["sop"]');
+        // if(e == null){
+        //   print('No SOP');
+        // }
+        
+        bodyr = json.decode(res.body)[0] as Map;
+      } on Exception catch (e) {
+       print('error caught: $e');
+      }
     }
     return SopModel.fromJson(bodyr);
   }  

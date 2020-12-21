@@ -65,7 +65,7 @@ class _MyRegister extends State<Sidebar> {
         itemBuilder: (BuildContext context,int index){
           // print(snapshot.data.data[index].name);
           return ListTile(
-              title:Text(snapshot.data.data[index].name ),
+              title:Text(snapshot.data.data[index].name, style: TextStyle( fontWeight: FontWeight.bold) ),
             onTap: () {
               // Navigator.pop(context);
               Navigator.pushNamed(context, '/sop', arguments: <String, String>{ 'id': snapshot.data.data[index].id.toString() },);

@@ -55,7 +55,7 @@ class _MyPass extends State<deptReive> {
                                 border: Border( bottom: BorderSide( color: Color.fromRGBO(255, 255, 255, 1), width: 2.0 ) )
                             ),
                             child: new ListTile( 
-                              title: Text( snapshot.data.data[index].name, textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
+                              title: Text( snapshot.data.data[index].name +'-'+ snapshot.data.data[index].id.toString(), textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
                                 onTap: () { Navigator.pushNamed(context, '/sop', arguments: { 'id': snapshot.data.data[index].id.toString(), } ); },
                             ),
                           )

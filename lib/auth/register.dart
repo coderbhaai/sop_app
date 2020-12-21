@@ -117,6 +117,14 @@ class _RegisterState extends State<Register> {
           },
         ),
         FlatButton(
+          padding: EdgeInsets.all(0.0),
+          child: Text("Home",
+              style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1) )),
+          onPressed: () {
+           Navigator.pushReplacementNamed(context, '/home');
+          },
+        ),
+        FlatButton(
           padding: EdgeInsets.only(left: 0.0),
           child: Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1))),
           // onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },

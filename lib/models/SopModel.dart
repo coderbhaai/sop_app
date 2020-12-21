@@ -10,36 +10,28 @@ String sopModelToJson(List<SopModel> data) => json.encode(List<dynamic>.from(dat
 
 class SopModel {
     SopModel({
+        this.name,
         this.id,
         this.sop,
-        this.sopfor,
-        this.updatedAt,
-        this.name,
         this.child,
     });
 
-    int id;
-    String sop;
-    int sopfor;
-    DateTime updatedAt;
     String name;
+    int id;
+    Sop sop;
     List<Child> child;
 
     factory SopModel.fromJson(Map<String, dynamic> json) => SopModel(
-        id: json["id"],
-        sop: json["sop"],
-        sopfor: json["sopfor"],
-        updatedAt: DateTime.parse(json["updated_at"]),
         name: json["name"],
+        id: json["id"],
+        sop: Sop.fromJson(json["sop"]),
         child: List<Child>.from(json["child"].map((x) => Child.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "id": id,
-        "sop": sop,
-        "sopfor": sopfor,
-        "updated_at": updatedAt.toIso8601String(),
         "name": name,
+        "id": id,
+        "sop": sop.toJson(),
         "child": List<dynamic>.from(child.map((x) => x.toJson())),
     };
 }
@@ -61,5 +53,25 @@ class Child {
     Map<String, dynamic> toJson() => {
         "name": name,
         "id": id,
+    };
+}
+
+class Sop {
+    Sop({
+        this.sop,
+        this.updatedAt,
+    });
+
+    String sop;
+    DateTime updatedAt;
+
+    factory Sop.fromJson(Map<String, dynamic> json) => Sop(
+        sop: json["sop"],
+        updatedAt: DateTime.parse(json["updated_at"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "sop": sop,
+        "updated_at": updatedAt.toIso8601String(),
     };
 }
