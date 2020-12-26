@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:sop_app/auth/login.dart';
+
 class Brand extends StatefulWidget {
   @override
   _BrandState createState() => _BrandState();
@@ -13,7 +15,9 @@ class _BrandState extends State<Brand> {
   }
   @override
   Widget build(BuildContext context) {
-    Timer( Duration(seconds: 2),() =>Navigator.pushNamed(context, '/login')
+    // Timer( Duration(seconds: 2),() =>Navigator.pushReplacementNamed(context, '/login')
+    Timer( Duration(seconds: 2),() =>Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+        Login()), (Route<dynamic> route) => false)
     );
     return SafeArea(
       child: Scaffold(

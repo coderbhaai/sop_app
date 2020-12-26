@@ -31,7 +31,7 @@ class _BottomBarState extends State<MyClass> {
                       children: [  
                         IconButton(
                           icon: Icon( Icons.home, color: selected_item  ? Color.fromRGBO(234,112,12, 1) : Colors.white, ),
-                          onPressed: () { Navigator.pushNamed(context, '/home'); },
+                          onPressed: () { Navigator.pushReplacementNamed(context, '/home'); },
                         ),
                         Text("Home", style: TextStyle( color: Colors.white )),
                       ],

@@ -38,22 +38,23 @@ class MyApp extends StatelessWidget {
             visualDensity: VisualDensity.adaptivePlatformDensity,
             fontFamily: 'Source Sans Pro'
           ),
-          home: FutureBuilder(
-              // future: getUserData(),
-              builder: (context, snapshot) {
-                switch (snapshot.connectionState) {
-                  case ConnectionState.none:
-                  case ConnectionState.waiting:
-                  default:
-                    if (snapshot.hasError)
-                      return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token ?? "" == null)
-                      return Login();
-                    else
-                      UserPreferences().removeUser();
-                    return Home();
-                }
-              }),
+          home: Login(),
+          // FutureBuilder(
+          //     future: getUserData(),
+          //     builder: (context, snapshot) {
+          //       switch (snapshot.connectionState) {
+          //         case ConnectionState.none:
+          //         case ConnectionState.waiting:
+          //         default:
+          //           if (snapshot.hasError)
+          //             return Text('Error: ${snapshot.error}');
+          //           else if (snapshot.data.token == null)
+          //             return Login();
+          //           else
+          //             UserPreferences().removeUser();
+          //           return Home();
+          //       }
+          //     }),
            initialRoute: '/brand',
          // initialRoute: '/home',
           routes: {

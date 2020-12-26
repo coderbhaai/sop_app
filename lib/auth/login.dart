@@ -1,5 +1,7 @@
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sop_app/pages/home.dart';
 import '../models/UserModel.dart';
 import 'providers/auth.dart';
 import 'providers/user_provider.dart';
@@ -8,6 +10,7 @@ import 'util/widgets.dart';
 import 'package:provider/provider.dart';
 
 class Login extends StatefulWidget {
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -17,6 +20,24 @@ class _LoginState extends State<Login> {
 
   String _username, _password;
 //Data data=new Data();
+
+  checkLogin ()async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String checkToken = prefs.getString("loginstatus")??"xyz";
+    print('check - $checkToken');
+    if(checkToken == "true"){
+      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+          Home()), (Route<dynamic> route) => false);
+      // Navigator.pushReplacementNamed(context, '/home');
+    }
+  }
+
+  @override
+  void initState() {
+    print('Login page');
+    checkLogin();
+  }
+
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);

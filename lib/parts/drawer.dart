@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:sop_app/auth/login.dart';
 import 'dart:convert';
 import 'package:sop_app/models/DeptListModel.dart';
 import '../auth/util/app_url.dart';
@@ -39,7 +40,9 @@ class _MyRegister extends State<Sidebar> {
                 if (await auth.logout()) {
                   SharedPreferences prefs = await SharedPreferences.getInstance();
                   prefs.clear();
-                  Navigator.pushReplacementNamed(context, '/login');
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+                      Login()), (Route<dynamic> route) => false);
+                  // Navigator.pushReplacementNamed(context, '/login');
                 }
               }
             ),
