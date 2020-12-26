@@ -4,11 +4,11 @@ import '../../models/UserModel.dart';
 import '../../models/UserModel.dart';
 
 class UserProvider with ChangeNotifier {
-  Dataa _user = new Dataa();
+  Data _user = new Data();
 
-  Dataa get user => _user;
+  Data get user => _user;
 
-  void setUser(Dataa user) {
+  void setUser(Data user) {
     _user = user;
     notifyListeners();
   }

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
-import 'package:sop_app/auth/util/app_url.dart';
-import 'package:sop_app/auth/util/shared_preference.dart';
 import 'dart:convert';
 import 'package:sop_app/models/DeptListModel.dart';
+import '../auth/util/app_url.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../auth/providers/auth.dart';
+import 'package:provider/provider.dart';
 
 class Sidebar extends StatefulWidget {
   _MyRegister createState() => _MyRegister();
@@ -20,6 +22,7 @@ class _MyRegister extends State<Sidebar> {
 
   @override
   Widget build(BuildContext context) {
+    AuthProvider auth = Provider.of<AuthProvider>(context);
     return Drawer(child:
         FutureBuilder<DeptListModel>(
         future: futureloinlevel,
@@ -30,12 +33,21 @@ class _MyRegister extends State<Sidebar> {
             children: [
             createDrawerHeader(context,snapshot),
             bodyofDrawer(context,snapshot),
+            ListTile(
+              title:Text('Log Out', style: TextStyle( fontWeight: FontWeight.bold) ),
+              onTap: () async {
+                if (await auth.logout()) {
+                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                  prefs.clear();
+                  Navigator.pushReplacementNamed(context, '/login');
+                }
+              }
+            ),
           ],
         );
           } else if (snapshot.hasError) {
           return Center(child: Text("${snapshot.error}"));
           }
-
           return (Center(
           child: CircularProgressIndicator(),
           ));
@@ -55,13 +67,12 @@ class _MyRegister extends State<Sidebar> {
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
-        itemCount: snapshot.data.data.length,
+        itemCount:snapshot.data.data.length,
         itemBuilder: (BuildContext context,int index){
           return ListTile(
               title:Text(snapshot.data.data[index].name, style: TextStyle( fontWeight: FontWeight.bold) ),
             onTap: () {
-              // Navigator.pop(context);
-              Navigator.pushNamed(context, '/sop', arguments: <String, String>{ 'id': snapshot.data.data[index].id.toString() },);
+              Navigator.pushReplacementNamed(context, '/sop', arguments: <String, String>{ 'id': snapshot.data.data[index].id.toString() },);
             },
           );
         }
@@ -70,12 +81,11 @@ class _MyRegister extends State<Sidebar> {
 
   Future<DeptListModel> fetchDeptListModel ()async{
     Map bodyr;
-    String token = await UserPreferences().getToken(null);
-    print(token);
-    var res = await http.get(AppUrl.getDept, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer $token', } );
-    if (res.statusCode == 200 && res.body.isNotEmpty){
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("userToken");
+    var res = await http.get(AppUrl.deptList, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer $token', } );
+    if (res.statusCode == 200 && res.body.isNotEmpty) {
       bodyr = json.decode(res.body) as Map;
-      print(bodyr);
     }
     return DeptListModel.fromJson(bodyr);
   }

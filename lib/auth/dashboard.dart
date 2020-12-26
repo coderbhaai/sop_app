@@ -14,7 +14,7 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
 
-    Dataa user = Provider.of<UserProvider>(context).user ;
+    Data user = Provider.of<UserProvider>(context).user ;
     AuthProvider auth = Provider.of<AuthProvider>(context);
 
     return Scaffold(

@@ -7,6 +7,8 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sop_app/models/SopModel.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../auth/util/app_url.dart';
 
 class Sop extends StatelessWidget {
   @override
@@ -46,8 +48,10 @@ class _SopPageState extends State<SopPage> {
                 builder: (context, snapshot) {
                   if (snapshot.hasData){
                     return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                     // crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-
                         Container (
                             decoration: new BoxDecoration ( 
                                 color: Color.fromRGBO(234, 112, 12, 1),
@@ -55,14 +59,16 @@ class _SopPageState extends State<SopPage> {
                             ),
                             child: new ListTile( title: Text( snapshot.data.name +'-'+ snapshot.data.id.toString(), textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), )), 
                         ),
-                        Center(
-                          child: SingleChildScrollView(
-                            child: Html( data: snapshot.data.sop != null ? snapshot.data.sop.sop: 'No Sop yet' , padding: EdgeInsets.all(8.0), ),
-                          ),
-                        ),
+                        // Center(
+                        //   child:
+                         Container(child: SingleChildScrollView(
+                             child: Center( child:Html( data: snapshot.data.sop != null ? snapshot.data.sop.sop : 'No Sops yet' , padding: EdgeInsets.all(8.0), ), )
+                          ),),
+                        // ),
                         Container(
                           margin: const EdgeInsets.only(top: 30.0),
-                          child: Text('Further Prcesses under '+ snapshot.data.name, textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0), ),
+                          child: Text(snapshot.data.child.isEmpty ? '': 'Further Processes under '+ snapshot.data.name,
+                            textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0), ),
                         ),
                         ListView.builder(
                           physics: NeverScrollableScrollPhysics(),
@@ -78,7 +84,7 @@ class _SopPageState extends State<SopPage> {
                             child: new ListTile(
                               title: Text( snapshot.data.child[index].name, textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
                                 onTap: () {
-                                  Navigator.pushNamed(context, '/sop', arguments: { 'id': snapshot.data.child[index].id.toString(), },);
+                                  Navigator.pushReplacementNamed(context, '/sop', arguments: { 'id': snapshot.data.child[index].id.toString(), },);
                                  },
                              ),
                            )
@@ -104,7 +110,9 @@ class _SopPageState extends State<SopPage> {
   }
   Future<SopModel> fetchSopModel (int i, BuildContext context)async{
     Map bodyr;
-    var res = await http.get("http://akkdev.in/api/sop/$id");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("userToken");
+    var res = await http.get(AppUrl.sop+'/$id', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer $token' } );
     if (res.statusCode == 200 && res.body.isNotEmpty) {
       try {
         bodyr = json.decode(res.body)[0] as Map;

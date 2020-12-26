@@ -7,7 +7,6 @@ import 'package:sop_app/pages/brand.dart';
 import 'package:sop_app/pages/awaitingApproval.dart';
 import 'package:sop_app/auth/login.dart';
 import 'package:sop_app/auth/register.dart';
-import 'package:sop_app/auth/welcome.dart';
 import 'auth/logout.dart';
 import 'package:sop_app/auth/providers/auth.dart';
 import 'package:sop_app/auth/providers/user_provider.dart';
@@ -19,14 +18,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
-  String token = prefs.getString("token");
+  String token = prefs.getString("userToken");
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future<Dataa> getUserData() => UserPreferences().getUser();
+    Future<Data> getUserData() => UserPreferences().getUser();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -40,20 +39,19 @@ class MyApp extends StatelessWidget {
             fontFamily: 'Source Sans Pro'
           ),
           home: FutureBuilder(
-              future: getUserData(),
+              // future: getUserData(),
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
-                    return CircularProgressIndicator();
                   default:
                     if (snapshot.hasError)
                       return Text('Error: ${snapshot.error}');
-                    else if (snapshot.data.token == null)
+                    else if (snapshot.data.token ?? "" == null)
                       return Login();
                     else
                       UserPreferences().removeUser();
-                    return Welcome(user: snapshot.data);
+                    return Home();
                 }
               }),
            initialRoute: '/brand',

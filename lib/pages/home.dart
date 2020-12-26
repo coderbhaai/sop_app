@@ -20,6 +20,17 @@ class _HomeState extends State<Home> {
         child: new Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[Header(), Slider(),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 30, 0, 15),
+            child: Text( 'Bizz Sutra', textAlign: TextAlign.center, style: TextStyle( color: Color.fromRGBO(234,112,12, 1), fontWeight: FontWeight.bold, fontSize: 25.0 ) ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text( 'The complete Standard Operating procesures (SOP for your organisation on one click)', textAlign: TextAlign.center,
+                style: TextStyle( fontWeight: FontWeight.w400 ) )
+          ),
+
+
             // BottomBar()
           ],
         ),
@@ -30,7 +41,6 @@ class _HomeState extends State<Home> {
 
 class Slider extends StatelessWidget {
   @override
-
   Widget build(BuildContext context) {
     return GFCarousel(
       autoPlay: true,
@@ -42,16 +52,12 @@ class Slider extends StatelessWidget {
             margin: EdgeInsets.all(8.0),
             child: ClipRRect(
               borderRadius: BorderRadius.all(Radius.circular(5.0)),
-              child: Image.asset(
-                  'assets/images/1.jpg',
-                  fit: BoxFit.cover,
-                  width: 1000.0
-              ),
+              // child: Image.asset( 'assets/images/$i.jpg', fit: BoxFit.cover, width: 1000.0 ),
+              child: Image.network('http://akkdev.in/images/app/$i.jpg', fit: BoxFit.cover, width: 1000.0)
             ),
           );
         },
       ).toList(),
-
     );
   }
 }

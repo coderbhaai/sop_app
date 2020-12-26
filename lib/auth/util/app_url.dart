@@ -7,6 +7,7 @@ class AppUrl {
   static const String logout = baseURL + "/logout";
    static const String register = baseURL + "/register";
   static const String forgotPassword = baseURL + "/forgotPassword";
-  static const String getDept = baseURL + "/deptList";
-  static const String orgList = baseURL + "/orgList";
+  static const String getDept = baseURL + "/orgList";
+  static const String deptList = baseURL + "/deptList";
+  static const String sop = baseURL + "/sop";
 }

@@ -4,6 +4,10 @@
 
 import 'dart:convert';
 
+UserModel userModelFromJson(String str) => UserModel.fromJson(json.decode(str));
+
+String userModelToJson(UserModel data) => json.encode(data.toJson());
+
 class UserModel {
   UserModel({
     this.success,
@@ -19,11 +23,7 @@ class UserModel {
   String accessToken;
   String tokenType;
   String message;
-  Dataa data;
-
-  factory UserModel.fromRawJson(String str) => UserModel.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
+  Data data;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     success: json["success"] == null ? null : json["success"],
@@ -31,7 +31,7 @@ class UserModel {
     accessToken: json["access_token"] == null ? null : json["access_token"],
     tokenType: json["token_type"] == null ? null : json["token_type"],
     message: json["message"] == null ? null : json["message"],
-    data: json["data"] == null ? null : Dataa.fromJson(json["data"]),
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -44,8 +44,8 @@ class UserModel {
   };
 }
 
- class Dataa {
-  Dataa({
+class Data {
+  Data({
     this.id,
     this.org,
     this.name,
@@ -56,6 +56,7 @@ class UserModel {
     this.status,
     this.createdAt,
     this.updatedAt,
+    this.token,
   });
 
   int id;
@@ -68,12 +69,9 @@ class UserModel {
   int status;
   DateTime createdAt;
   DateTime updatedAt;
+  String token;
 
-  factory Dataa.fromRawJson(String str) => Dataa.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Dataa.fromJson(Map<String, dynamic> json) => Dataa(
+  factory Data.fromJson(Map<String, dynamic> json) => Data(
     id: json["id"] == null ? null : json["id"],
     org: json["org"] == null ? null : json["org"],
     name: json["name"] == null ? null : json["name"],
@@ -84,6 +82,7 @@ class UserModel {
     status: json["status"] == null ? null : json["status"],
     createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
     updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
+    token: json["token"] == null ? null : json["token"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -97,5 +96,6 @@ class UserModel {
     "status": status == null ? null : status,
     "created_at": createdAt == null ? null : createdAt.toIso8601String(),
     "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
+    "token": token == null ? null : token,
   };
 }

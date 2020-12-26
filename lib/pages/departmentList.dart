@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../parts/footer.dart';
 import '../parts/appBar.dart';
 import '../parts/drawer.dart';
@@ -6,6 +7,7 @@ import 'dart:async';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:sop_app/models/DeptListModel.dart';
+import '../auth/util/app_url.dart';
 
 class DepartmentList extends StatelessWidget {
   @override
@@ -56,7 +58,7 @@ class _MyPass extends State<deptReive> {
                             ),
                             child: new ListTile( 
                               title: Text( snapshot.data.data[index].name +'-'+ snapshot.data.data[index].id.toString(), textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), ),
-                                onTap: () { Navigator.pushNamed(context, '/sop', arguments: { 'id': snapshot.data.data[index].id.toString(), } ); },
+                                onTap: () { Navigator.pushReplacementNamed(context, '/sop', arguments: { 'id': snapshot.data.data[index].id.toString(), } ); },
                             ),
                           )
                         )
@@ -72,11 +74,12 @@ class _MyPass extends State<deptReive> {
   }
   Future<DeptListModel> fetchDeptListModel (int i,BuildContext context)async{
     Map bodyr;
-
-    var res = await http.get("http://akkdev.in/api/deptList");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String token = prefs.getString("userToken");
+    var res = await http.get(AppUrl.deptList, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer $token' } );
     if (res.statusCode == 200 && res.body.isNotEmpty) {
       bodyr = json.decode(res.body) as Map;
     }
     return DeptListModel.fromJson(bodyr);
-  }  
+  }
 }

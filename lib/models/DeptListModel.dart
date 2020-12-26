@@ -1,12 +1,4 @@
-// To parse this JSON data, do
-//
-//     final deptListModel = deptListModelFromJson(jsonString);
-
 import 'dart:convert';
-
-DeptListModel deptListModelFromJson(String str) => DeptListModel.fromJson(json.decode(str));
-
-String deptListModelToJson(DeptListModel data) => json.encode(data.toJson());
 
 class DeptListModel {
     DeptListModel({
@@ -14,6 +6,10 @@ class DeptListModel {
     });
 
     List<Datum> data;
+
+    factory DeptListModel.fromRawJson(String str) => DeptListModel.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
 
     factory DeptListModel.fromJson(Map<String, dynamic> json) => DeptListModel(
         data: json["data"] == null ? null : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
@@ -32,6 +28,10 @@ class Datum {
 
     String name;
     int id;
+
+    factory Datum.fromRawJson(String str) => Datum.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
         name: json["name"] == null ? null : json["name"],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flushbar/flushbar.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../models/UserModel.dart';
 import 'providers/auth.dart';
 import 'providers/user_provider.dart';
@@ -17,30 +18,41 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  // Future<OrgList> futureloinlevel;
   final formKey = new GlobalKey<FormState>();
   String name, org, email, password, password_confirmation;
   String selectedOrg;
   List data = List();
 
   Future getOrgList() async {
-    var response = await http.get(AppUrl.orgList, headers: {'Accept': 'application/json'});
+    var response = await http.get(AppUrl.getDept, headers: {'Accept': 'application/json'});
     var responseData = json.decode(response.body);
-    print(responseData['data']);
     setState(() {
       data = responseData['data'];
     });
     return "success";
   }
-
+  void callmyFun() async{
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String check=prefs.getString("loginstatus") ?? "hii";
+    try {
+      if(check=="true"){
+        Navigator.pushReplacementNamed(context, '/home');
+      }else{
+        getOrgList();
+      }
+    } on Exception catch (e) {
+      print('error caught: $e');
+    }
+  }
   @override
   void initState(){
     super.initState();
-    getOrgList();
+    callmyFun();
   }
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
-
     final nameField = TextFormField(
       autofocus: false,
       validator: (value) => value.isEmpty ? "Please enter first name" : null,
@@ -50,20 +62,21 @@ class _RegisterState extends State<Register> {
     );
 
     final orgField = Container(
-      width: 500.0,
+    width: 500.0,
+    // child: DropdownButtonHideUnderline( 
       child: DropdownButton(
-        autofocus: false,
-        value: selectedOrg,
-        style: TextStyle(color: Color.fromRGBO(0,66,96, 1) ),
-        hint: Text('Select Organisation', style: TextStyle( color: Color.fromRGBO(234,112,12, 1) ) ),
-        items: data.map((i){
-          return DropdownMenuItem(
-            child: Text(i['org'], style: TextStyle( color: Color.fromRGBO(234,112,12, 1) )),
-            value: i['id'].toString(),
-          );
-        },).toList(),
-        onChanged: (value) { setState(() { selectedOrg = value; }); },
-      )
+      autofocus: false,
+      value: selectedOrg,
+      style: TextStyle(color: Color.fromRGBO(0,66,96, 1) ),
+      hint: Text('Select Organisation', style: TextStyle( color: Color.fromRGBO(234,112,12, 1) ) ),
+      items: data.map((i){
+        return DropdownMenuItem(
+          child: Text(i['org'], style: TextStyle( color: Color.fromRGBO(234,112,12, 1) )),
+          value: i['id'].toString(),
+        );
+      },).toList(),
+      onChanged: (value) { setState(() { selectedOrg = value; }); },
+    )
     // )
     );
 
@@ -113,22 +126,16 @@ class _RegisterState extends State<Register> {
           },
         ),
         FlatButton(
-          padding: EdgeInsets.all(0.0),
-          child: Text("Home",
-              style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1) )),
-          onPressed: () {
-           Navigator.pushReplacementNamed(context, '/home');
-          },
-        ),
-        FlatButton(
           padding: EdgeInsets.only(left: 0.0),
           child: Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1))),
+          // onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },
           onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },
         ),
       ],
     );
 
     var doRegister = () async{
+     // Map response;
       final form = formKey.currentState;
       if (form.validate()) {
         form.save();
@@ -173,4 +180,6 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
+
 }

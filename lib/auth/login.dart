@@ -35,7 +35,7 @@ class _LoginState extends State<Login> {
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => _password = value,
       decoration: buildInputDecoration("Confirm password", Icons.lock),
-      style: TextStyle(fontSize: 18, color: Colors.white)
+      style: TextStyle(fontSize: 18, color: Colors.white),
     );
 
     var loading = Row(
@@ -70,6 +70,8 @@ class _LoginState extends State<Login> {
       if (form.validate()) {
         form.save();
         auth.fetchLoginModel(context,_username, _password);
+      } else {
+        print("form is invalid");
       }
     };
 

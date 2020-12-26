@@ -13,7 +13,7 @@ class _BrandState extends State<Brand> {
   }
   @override
   Widget build(BuildContext context) {
-    Timer( Duration(seconds: 2),() =>Navigator.pushNamed(context, '/register')
+    Timer( Duration(seconds: 2),() =>Navigator.pushNamed(context, '/login')
     );
     return SafeArea(
       child: Scaffold(
