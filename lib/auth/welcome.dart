@@ -4,7 +4,7 @@ import 'providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 class Welcome extends StatelessWidget {
-  final UserModel user;
+  final Dataa user;
 
   Welcome({Key key, @required this.user}) : super(key: key);
 

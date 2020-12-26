@@ -5,7 +5,6 @@ import 'package:sop_app/pages/sop.dart';
 import 'package:sop_app/pages/home.dart';
 import 'package:sop_app/pages/brand.dart';
 import 'package:sop_app/pages/awaitingApproval.dart';
-import 'package:sop_app/auth/dashboard.dart';
 import 'package:sop_app/auth/login.dart';
 import 'package:sop_app/auth/register.dart';
 import 'package:sop_app/auth/welcome.dart';
@@ -21,19 +20,13 @@ Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
   SharedPreferences prefs = await SharedPreferences.getInstance();
   String token = prefs.getString("token");
-  if(token != null) {
-    print("token:" + token);
-  }
-  else{
-    print('token is null');
-  }
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Future<UserModel> getUserData() => UserPreferences().getUser();
+    Future<Dataa> getUserData() => UserPreferences().getUser();
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
@@ -49,7 +42,6 @@ class MyApp extends StatelessWidget {
           home: FutureBuilder(
               future: getUserData(),
               builder: (context, snapshot) {
-                print('home in main ' + snapshot.data.toString());
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
                   case ConnectionState.waiting:
@@ -64,13 +56,12 @@ class MyApp extends StatelessWidget {
                     return Welcome(user: snapshot.data);
                 }
               }),
-          // initialRoute: '/brand',
-          initialRoute: '/home',
+           initialRoute: '/brand',
+         // initialRoute: '/home',
           routes: {
             '/home': (context) => Home(),
             '/register': (context) => Register(),
             '/login': (context) => Login(),
-            '/dashboard': (context) => DashBoard(),
             '/logout': (context) => Logout(),
             '/brand': (context) => Brand(),
             '/awaitingApproval': (context) => AwaitingApproval(),

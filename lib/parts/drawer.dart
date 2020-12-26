@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:http/http.dart' as http;
+import 'package:sop_app/auth/util/app_url.dart';
+import 'package:sop_app/auth/util/shared_preference.dart';
 import 'dart:convert';
 import 'package:sop_app/models/DeptListModel.dart';
 
@@ -38,14 +40,8 @@ class _MyRegister extends State<Sidebar> {
           child: CircularProgressIndicator(),
           ));
         }),
-
     );
   }
-
-  // Widget createDrawerHeader(BuildContext context, AsyncSnapshot<DeptListModel> snapshot) {
-  //   return DrawerHeader(
-  //     child: Center(child:Text("Header")),);
-  // }
 
   Widget createDrawerHeader(BuildContext context, AsyncSnapshot<DeptListModel> snapshot) {
     return DrawerHeader(
@@ -55,15 +51,12 @@ class _MyRegister extends State<Sidebar> {
   }
 
  Widget bodyofDrawer(BuildContext context, AsyncSnapshot<DeptListModel> snapshot) {
-    print('bod');
-    print(snapshot.data);
     return ListView.builder(
         physics: NeverScrollableScrollPhysics(),
         shrinkWrap: true,
         scrollDirection: Axis.vertical,
         itemCount: snapshot.data.data.length,
         itemBuilder: (BuildContext context,int index){
-          // print(snapshot.data.data[index].name);
           return ListTile(
               title:Text(snapshot.data.data[index].name, style: TextStyle( fontWeight: FontWeight.bold) ),
             onTap: () {
@@ -73,18 +66,16 @@ class _MyRegister extends State<Sidebar> {
           );
         }
     );
-
  }
 
-
   Future<DeptListModel> fetchDeptListModel ()async{
-    print('Calling API');
     Map bodyr;
-    var res = await http.get("http://10.0.2.2:8000/api/deptList");
-    print(res.toString());
-    if (res.statusCode == 200 && res.body.isNotEmpty) {
+    String token = await UserPreferences().getToken(null);
+    print(token);
+    var res = await http.get(AppUrl.getDept, headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer $token', } );
+    if (res.statusCode == 200 && res.body.isNotEmpty){
       bodyr = json.decode(res.body) as Map;
-      print(bodyr.toString());
+      print(bodyr);
     }
     return DeptListModel.fromJson(bodyr);
   }

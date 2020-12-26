@@ -16,11 +16,11 @@ class DeptListModel {
     List<Datum> data;
 
     factory DeptListModel.fromJson(Map<String, dynamic> json) => DeptListModel(
-        data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+        data: json["data"] == null ? null : List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
     );
 
     Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": data == null ? null : List<dynamic>.from(data.map((x) => x.toJson())),
     };
 }
 
@@ -34,12 +34,12 @@ class Datum {
     int id;
 
     factory Datum.fromJson(Map<String, dynamic> json) => Datum(
-        name: json["name"],
-        id: json["id"],
+        name: json["name"] == null ? null : json["name"],
+        id: json["id"] == null ? null : json["id"],
     );
 
     Map<String, dynamic> toJson() => {
-        "name": name,
-        "id": id,
+        "name": name == null ? null : name,
+        "id": id == null ? null : id,
     };
 }

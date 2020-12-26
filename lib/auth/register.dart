@@ -17,21 +17,18 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  // Future<OrgList> futureloinlevel;
   final formKey = new GlobalKey<FormState>();
   String name, org, email, password, password_confirmation;
   String selectedOrg;
   List data = List();
 
   Future getOrgList() async {
-    var response = await http.get(AppUrl.getDept, headers: {'Accept': 'application/json'});
+    var response = await http.get(AppUrl.orgList, headers: {'Accept': 'application/json'});
     var responseData = json.decode(response.body);
+    print(responseData['data']);
     setState(() {
       data = responseData['data'];
     });
-    print(responseData['data']);
-    print('ding');
-    print(data);
     return "success";
   }
 
@@ -53,21 +50,20 @@ class _RegisterState extends State<Register> {
     );
 
     final orgField = Container(
-    width: 500.0,
-    // child: DropdownButtonHideUnderline( 
+      width: 500.0,
       child: DropdownButton(
-      autofocus: false,
-      value: selectedOrg,
-      style: TextStyle(color: Color.fromRGBO(0,66,96, 1) ),
-      hint: Text('Select Organisation', style: TextStyle( color: Color.fromRGBO(234,112,12, 1) ) ),
-      items: data.map((i){
-        return DropdownMenuItem(
-          child: Text(i['org'], style: TextStyle( color: Color.fromRGBO(234,112,12, 1) )),
-          value: i['id'].toString(),
-        );
-      },).toList(),
-      onChanged: (value) { setState(() { selectedOrg = value; }); },
-    )
+        autofocus: false,
+        value: selectedOrg,
+        style: TextStyle(color: Color.fromRGBO(0,66,96, 1) ),
+        hint: Text('Select Organisation', style: TextStyle( color: Color.fromRGBO(234,112,12, 1) ) ),
+        items: data.map((i){
+          return DropdownMenuItem(
+            child: Text(i['org'], style: TextStyle( color: Color.fromRGBO(234,112,12, 1) )),
+            value: i['id'].toString(),
+          );
+        },).toList(),
+        onChanged: (value) { setState(() { selectedOrg = value; }); },
+      )
     // )
     );
 
@@ -127,28 +123,16 @@ class _RegisterState extends State<Register> {
         FlatButton(
           padding: EdgeInsets.only(left: 0.0),
           child: Text("Sign In", style: TextStyle(fontWeight: FontWeight.bold, color: Color.fromRGBO(234,112,12, 1))),
-          // onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },
-          onPressed: () { Navigator.pushReplacementNamed(context, '/awaitingApproval'); },
+          onPressed: () { Navigator.pushReplacementNamed(context, '/login'); },
         ),
       ],
     );
 
-    var doRegister = () {
+    var doRegister = () async{
       final form = formKey.currentState;
       if (form.validate()) {
         form.save();
-        auth.register(name, email, password, password_confirmation, selectedOrg ).then((response) {
-          if (response['status']) {
-            UserModel user = response['data'];
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/awaitingApproval');
-          } else {
-            Flushbar(
-              title: "Registration failed",
-              message: response.toString(),
-              duration: Duration(seconds: 20),
-            ).show(context);
-          }
+        await auth.fetchRegModel(context,name, email, password, password_confirmation, selectedOrg ).then((response) {
         });
       } else {
         Flushbar(

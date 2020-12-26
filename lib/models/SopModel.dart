@@ -4,35 +4,35 @@
 
 import 'dart:convert';
 
-List<SopModel> sopModelFromJson(String str) => List<SopModel>.from(json.decode(str).map((x) => SopModel.fromJson(x)));
-
-String sopModelToJson(List<SopModel> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
-
 class SopModel {
     SopModel({
         this.name,
         this.id,
-        this.sop,
         this.child,
+        this.sop,
     });
 
     String name;
     int id;
-    Sop sop;
     List<Child> child;
+    Sop sop;
+
+    factory SopModel.fromRawJson(String str) => SopModel.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
 
     factory SopModel.fromJson(Map<String, dynamic> json) => SopModel(
-        name: json["name"],
-        id: json["id"],
-        sop: Sop.fromJson(json["sop"]),
-        child: List<Child>.from(json["child"].map((x) => Child.fromJson(x))),
+        name: json["name"] == null ? null : json["name"],
+        id: json["id"] == null ? null : json["id"],
+        child: json["child"] == null ? null : List<Child>.from(json["child"].map((x) => Child.fromJson(x))),
+        sop: json["sop"] == null ? null : Sop.fromJson(json["sop"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "name": name,
-        "id": id,
-        "sop": sop.toJson(),
-        "child": List<dynamic>.from(child.map((x) => x.toJson())),
+        "name": name == null ? null : name,
+        "id": id == null ? null : id,
+        "child": child == null ? null : List<dynamic>.from(child.map((x) => x.toJson())),
+        "sop": sop == null ? null : sop.toJson(),
     };
 }
 
@@ -45,14 +45,18 @@ class Child {
     String name;
     int id;
 
+    factory Child.fromRawJson(String str) => Child.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
     factory Child.fromJson(Map<String, dynamic> json) => Child(
-        name: json["name"],
-        id: json["id"],
+        name: json["name"] == null ? null : json["name"],
+        id: json["id"] == null ? null : json["id"],
     );
 
     Map<String, dynamic> toJson() => {
-        "name": name,
-        "id": id,
+        "name": name == null ? null : name,
+        "id": id == null ? null : id,
     };
 }
 
@@ -65,13 +69,17 @@ class Sop {
     String sop;
     DateTime updatedAt;
 
+    factory Sop.fromRawJson(String str) => Sop.fromJson(json.decode(str));
+
+    String toRawJson() => json.encode(toJson());
+
     factory Sop.fromJson(Map<String, dynamic> json) => Sop(
-        sop: json["sop"],
-        updatedAt: DateTime.parse(json["updated_at"]),
+        sop: json["sop"] == null ? null : json["sop"],
+        updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
     );
 
     Map<String, dynamic> toJson() => {
-        "sop": sop,
-        "updated_at": updatedAt.toIso8601String(),
+        "sop": sop == null ? null : sop,
+        "updated_at": updatedAt == null ? null : updatedAt.toIso8601String(),
     };
 }

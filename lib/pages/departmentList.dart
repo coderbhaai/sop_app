@@ -72,11 +72,10 @@ class _MyPass extends State<deptReive> {
   }
   Future<DeptListModel> fetchDeptListModel (int i,BuildContext context)async{
     Map bodyr;
-    var res = await http.get("http://10.0.2.2:8000/api/deptList");
-    print(res.toString());
+
+    var res = await http.get("http://akkdev.in/api/deptList");
     if (res.statusCode == 200 && res.body.isNotEmpty) {
       bodyr = json.decode(res.body) as Map;
-      print(bodyr.toString());
     }
     return DeptListModel.fromJson(bodyr);
   }  

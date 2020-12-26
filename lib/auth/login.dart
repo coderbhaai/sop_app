@@ -16,7 +16,7 @@ class _LoginState extends State<Login> {
   final formKey = new GlobalKey<FormState>();
 
   String _username, _password;
-
+//Data data=new Data();
   @override
   Widget build(BuildContext context) {
     AuthProvider auth = Provider.of<AuthProvider>(context);
@@ -26,6 +26,7 @@ class _LoginState extends State<Login> {
       validator: validateEmail,
       onSaved: (value) => _username = value,
       decoration: buildInputDecoration("Confirm password", Icons.email),
+      style: TextStyle(fontSize: 18, color: Colors.white),
     );
 
     final passwordField = TextFormField(
@@ -34,6 +35,7 @@ class _LoginState extends State<Login> {
       validator: (value) => value.isEmpty ? "Please enter password" : null,
       onSaved: (value) => _password = value,
       decoration: buildInputDecoration("Confirm password", Icons.lock),
+      style: TextStyle(fontSize: 18, color: Colors.white)
     );
 
     var loading = Row(
@@ -65,28 +67,9 @@ class _LoginState extends State<Login> {
 
     var doLogin = () {
       final form = formKey.currentState;
-
       if (form.validate()) {
         form.save();
-
-        final Future<Map<String, dynamic>> successfulMessage =
-        auth.login(_username, _password);
-
-        successfulMessage.then((response) {
-          if (response['status']) {
-            UserModel user = response['user'];
-            Provider.of<UserProvider>(context, listen: false).setUser(user);
-            Navigator.pushReplacementNamed(context, '/dashboard');
-          } else {
-            Flushbar(
-              title: "Failed Login",
-              message: response['message']['message'].toString(),
-              duration: Duration(seconds: 3),
-            ).show(context);
-          }
-        });
-      } else {
-        print("form is invalid");
+        auth.fetchLoginModel(context,_username, _password);
       }
     };
 

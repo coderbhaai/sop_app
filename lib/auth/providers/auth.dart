@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
+import 'package:sop_app/models/RegModel.dart';
 import '../../models/UserModel.dart';
 import '../util/app_url.dart';
 import '../util/shared_preference.dart';
+import 'user_provider.dart';
 
 enum Status {
   NotLoggedIn,
@@ -28,16 +32,12 @@ class AuthProvider with ChangeNotifier {
     var result;
 
     final Map<String, dynamic> loginData = {
-      // 'user': {
       'email': email,
       'password': password
-      // }
     };
 
     _loggedInStatus = Status.Authenticating;
     notifyListeners();
-    print("sending login data...");
-    print(loginData);
     Response response = await post(
       AppUrl.login,
       body: json.encode(loginData),
@@ -47,7 +47,7 @@ class AuthProvider with ChangeNotifier {
     if (response.statusCode == 201) {
       final Map<String, dynamic> responseData = json.decode(response.body);
       var userData = responseData['data'];
-      UserModel authUser = UserModel.fromJson(userData);
+      Dataa authUser = UserModel.fromJson(userData) as Dataa;
       UserPreferences().saveUser(authUser);
       _loggedInStatus = Status.LoggedIn;
       notifyListeners();
@@ -63,7 +63,8 @@ class AuthProvider with ChangeNotifier {
     return result;
   }
 
-  Future<Map<String, dynamic>> register( String name, String email, String password, String password_confirmation, String selectedOrg ) async {
+  Future<Map<String, dynamic>> register( String name, String email, String password, String password_confirmation,
+      String selectedOrg ) async {
     final Map<String, dynamic> registrationData = {
       'name': name,
       'org': selectedOrg,
@@ -73,27 +74,92 @@ class AuthProvider with ChangeNotifier {
       'password': password,
       'password_confirmation': password_confirmation,
     };
-    print('sending registration data====');
-    print(registrationData);
-    print('done sending registration data====');
-    return await post(AppUrl.register, body: json.encode(registrationData), headers: {'Content-Type': 'application/json'})
+    return await post(AppUrl.register, body: json.encode(registrationData),
+        headers: {'Content-Type': 'application/json'})
       .then( onValue )
       .catchError(onError);
   }
+  Future<void> fetchLoginModel (BuildContext context, String email, String password,
+     )async{
+    Map bodyr;
+    final Map<String, dynamic> loginData = {
+      'email': email,
+      'password': password
+    };
+    var res = await post(AppUrl.login,body: json.encode(loginData), headers: {'Content-Type': 'application/json'});
+    if (res.body.isNotEmpty) {
+      try {
+        bodyr = json.decode(res.body) as Map;
+        String Sucess=UserModel.fromJson(bodyr).success.toString();
+        UserPreferences().saveUser(UserModel.fromJson(bodyr).data);
+        _loggedInStatus = Status.LoggedIn;
+        notifyListeners();
+        if (Sucess=='true') {
+          Dataa user = UserModel.fromJson(bodyr).data;
+          Provider.of<UserProvider>(context, listen: false).setUser(user);
+          Navigator.pushReplacementNamed(context, '/home');
+        } else {
+          String Message=UserModel.fromJson(bodyr).message.toString();
+          Flushbar(
+            title: "Failed Login",
+
+            message: Message,
+            duration: Duration(seconds: 3),
+          ).show(context);
+        }
+      } on Exception catch (e) {
+        print('error caught: $e');
+      }
+    }
+  }
+
+  // login close
+
+
+  Future<void> fetchRegModel (BuildContext context,String name, String email, String password,
+      String password_confirmation,
+      String selectedOrg)async{
+    Map bodyr;
+    final Map<String, dynamic> registrationData = {
+      'name': name,
+      'org': selectedOrg,
+      'email': email,
+      'role': 'User',
+      'status': 0,
+      'password': password,
+      'password_confirmation': password_confirmation,
+    };
+    var res = await post(AppUrl.register,body: json.encode(registrationData), headers: {'Content-Type': 'application/json'});
+    if (res.body.isNotEmpty) {
+      try {
+        bodyr = json.decode(res.body) as Map;
+        String Sucess=RegModel.fromJson(bodyr).success.toString();
+        if (Sucess=='true') {
+          Navigator.pushReplacementNamed(context, '/awaitingApproval');
+        } else {
+          Flushbar(
+            title: "Message",
+            message: RegModel.fromJson(bodyr).message.toString(),
+            duration: Duration(seconds: 20),
+          ).show(context);
+        }
+      } on Exception catch (e) {
+        print('error caught: $e');
+      }
+    }
+    //return RegModel.fromJson(bodyr);
+  }
+
 
   static Future<FutureOr> onValue(Response response) async {
     var result;
     final Map<String, dynamic> responseData = json.decode(response.body);
-
-    print(response.statusCode);
-    print(response.body);
-
     if (response.statusCode == 201) {
       var userData = responseData['data'];
 
       UserModel authUser = UserModel.fromJson(userData);
 
-      UserPreferences().saveUser(authUser);
+      UserPreferences().saveUser(UserModel.fromJson(userData).data);
       result = {
         'status': true,
         'message': 'Successfully registered',
@@ -110,7 +176,6 @@ class AuthProvider with ChangeNotifier {
   }
 
   static onError(error) {
-    print("the error is $error.detail");
     return {'status': false, 'message': 'Unsuccessful Request', 'data': error};
   }
 
