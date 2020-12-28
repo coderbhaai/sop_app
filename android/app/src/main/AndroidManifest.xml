@@ -5,7 +5,7 @@
    <application
         android:usesCleartextTraffic="true"
         android:label="PSP App"
-        android:icon="@mipmap/sslogo">
+        android:icon="@mipmap/bslogo">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
