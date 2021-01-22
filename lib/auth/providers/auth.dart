@@ -98,7 +98,7 @@ class AuthProvider with ChangeNotifier {
     if (res.body.isNotEmpty) {
       try {
         bodyr = json.decode(res.body) as Map;
-        String Sucess=UserModel.fromJson(bodyr).success.toString();
+        String Sucess = UserModel.fromJson(bodyr).success.toString();
         UserPreferences().saveUser(UserModel.fromJson(bodyr).data);
         _loggedInStatus = Status.LoggedIn;
         notifyListeners();

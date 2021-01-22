@@ -59,12 +59,11 @@ class _SopPageState extends State<SopPage> {
                             ),
                             child: new ListTile( title: Text( snapshot.data.name +'-'+ snapshot.data.id.toString(), textAlign: TextAlign.center, style: TextStyle( color: Colors.white, ), )), 
                         ),
-                        // Center(
-                        //   child:
-                         Container(child: SingleChildScrollView(
+                         Container(
+                           child: SingleChildScrollView(
                              child: Center( child:Html( data: snapshot.data.sop != null ? snapshot.data.sop.sop : 'No Sops yet' , padding: EdgeInsets.all(8.0), ), )
-                          ),),
-                        // ),
+                            ),
+                         ),
                         Container(
                           margin: const EdgeInsets.only(top: 30.0),
                           child: Text(snapshot.data.child.isEmpty ? '': 'Further Processes under '+ snapshot.data.name,
@@ -93,10 +92,11 @@ class _SopPageState extends State<SopPage> {
                     );
                   } else if (snapshot.hasError) {
                     return Container(
+
                         alignment: Alignment.center,
                         height: 300,
                         margin: EdgeInsets.all(10),
-                        child:Text('No processes for this Yet !!!', style: TextStyle( color: Color.fromRGBO(0,66,96, 1), fontWeight: FontWeight.bold ) , )
+                        child:Text('No processes for this Yet !!! = +$snapshot.error', style: TextStyle( color: Color.fromRGBO(0,66,96, 1), fontWeight: FontWeight.bold ) , )
                     );
                   }
                   return ( Center ( child: CircularProgressIndicator(), ));

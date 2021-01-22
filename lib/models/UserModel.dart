@@ -60,7 +60,7 @@ class Data {
   });
 
   int id;
-  String org;
+  int org;
   String name;
   String email;
   String role;
